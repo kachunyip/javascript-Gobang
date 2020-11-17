@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #canvas {
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas><br>
+    <button type="button" class="chgColor" value="#00f">blue</button>
+    <button type="button" class="chgColor" value="#0f0">green</button>
+    <input type="" name="" value="" placeholder="输入长度" id="lineWidthValue">
+    <button id="setLineWidth">setting</button>
+    <button id="clear">clear</button>
+
+    <script>
+        var cvs = document.getElementById('canvas');
+        var ctx = cvs.getContext('2d');
+        var setLineWidthBtn = document.getElementById('setLineWidth');
+        var clear = document.getElementById('clear')
+
+        cvs.height = 400;
+        cvs.width = 800;
+        lineColor = '#foo';
+        lineWidth = 10;
+
+        function getClass(classname) {
+            var classes = [];
+            var eles = document.getElementsByTagName('*');
+            for (i in eles) if (eles[i].className === classname)
+                classes.push(eles[i]);
+            return classes;
+        }
+
+        var chgColorBtns = getClass('chgColor');
+        for (i in chgColorBtns) {
+            chgColorBtns[i].onclick = function () {
+                lineColor = this.value;
+            }
+        }
+
+        setLineWidthBtn.onclick = function (e) {
+            lineWidth = parseInt(document.getElementById('lineWidthValue').value);
+        }
+
+        clear.onclick = function () {
+            ctx.beginPath();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.closePath();
+        }
+
+        cvs.onmousedown = function (e) {
+            ctx.beginPath();
+            ctx.moveTo(e.pageX - cvs.offsetLeft, e.pageY - cvs.offsetTop);
+            ctx.strokeStyle = lineColor;
+            ctx.lineWidth = lineWidth;
+            ctx.lineCap = 'round';
+            cvs.onmousemove = function (e) {
+                ctx.lineTo(e.pageX - cvs.offsetLeft, e.pageY - cvs.offsetTop);
+                ctx.stroke();
+            }
+            cvs.onmouseup = function (e) {
+                cvs.onmousemove = null;
+                cvs.onmouseup = null;
+                ctx.closePath();
+            }
+        }
+    </script>
+</body>
+
+</html>
